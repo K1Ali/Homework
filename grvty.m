@@ -60,8 +60,10 @@ for col = 1:numColumns
     columnVectors{col} = cellArray(:, col);
 end
 dist = cell2mat(columnVectors{3});
-gdp = cell2mat(columnVectors{4});
-gdp = reshape(gdp,[],28);
+GDP.GDP = GDP.Value;
+logical_index = ismember(GDP.LOCATION, common_values);
+GDP = GDP(logical_index, :);
+GDP = GDP(:, "GDP");
 dist = reshape(dist,[],28);
 export = cell2mat(columnVectors{5});
 export = reshape(export,[],28)';
@@ -71,8 +73,17 @@ dist.Properties.RowNames = common_values;
 modifiedNames = strcat(common_values, '_export');
 export = array2table(export, 'VariableNames', modifiedNames);
 export.Properties.RowNames = common_values;
-modifiedNames = strcat(common_values, '_gdp');
-gdp = array2table(gdp, 'VariableNames', modifiedNames);
-gdp.Properties.RowNames = common_values;
-gravity = [dist, gdp, export];
-clearvars -except gravity
+gravity = [dist, GDP, export];
+%clearvars -except gravity
+%%
+GDP_i = log(table2array(GDP));
+GDP_j = GDP_i';
+GDP_i = repmat(GDP_i, 1, 28);
+GDP_j = repmat(GDP_j, 28, 1);
+GDP_j = reshape(GDP_j, [], 1);
+GDP_i = reshape(GDP_i, [], 1);
+dist_ij = log(table2array(dist));
+dist_ij = reshape(dist_ij, [], 1);
+export_ij = log(table2array(export));
+export_ij = reshape(export_ij, [], 1);
+b = fitlm([GDP_i,GDP_j, dist_ij], export_ij, "linear");
