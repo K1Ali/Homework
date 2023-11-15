@@ -87,3 +87,56 @@ dist_ij = reshape(dist_ij, [], 1);
 export_ij = log(table2array(export));
 export_ij = reshape(export_ij, [], 1);
 b = fitlm([GDP_i,GDP_j, dist_ij], export_ij, "linear");
+%%
+contig = readtable('C:\Users\Ali Kazimov\Downloads\dist_cepii.xls');
+x = export.Properties.RowNames;
+contig = contig(ismember(contig.iso_o, x), :);
+contig = contig(ismember(contig.iso_d, x), :);
+contig(:,4:end)=[];
+
+source_countries = unique(contig.iso_o);
+
+dummy_variables = zeros(length(contig.iso_o), length(source_countries) - 1);
+
+for i = 1:length(source_countries)
+    if i < length(source_countries)
+        dummy_variables(:, i) = strcmp(contig.iso_o, source_countries{i});
+    end
+end
+dummy_variable_names = strcat('dummy_', source_countries(1:end-1));
+
+data_with_dummies = [contig array2table(dummy_variables, 'VariableNames', dummy_variable_names)];
+destination_countries = unique(contig.iso_d);
+
+dummy_variables = zeros(length(contig.iso_d), length(destination_countries) - 1);
+
+for i = 1:length(destination_countries)
+    if i < length(destination_countries)
+        dummy_variables(:, i) = strcmp(contig.iso_d, destination_countries{i});
+    end
+end
+dummy_variable_names = strcat('dummy_2_', destination_countries(1:end-1));
+
+data_with_dummies_2 = [contig array2table(dummy_variables, 'VariableNames', dummy_variable_names)];
+gdp = table2array(GDP);
+sumValue = sum(gdp(1:28, 1));
+sumValue = log(sumValue);
+SumGdp = repmat(sumValue, 1, 784)';
+border = contig(:,"contig");
+
+subsetTable = data_with_dummies(:, 4:30);
+subsetTable_2 = data_with_dummies_2(:, 4:30);
+
+dataMatrix = table2array(subsetTable);
+numColumns = size(dataMatrix, 2);
+
+for i = 1:numColumns
+    eval(['origin_', char(source_countries(i)) , ' = dataMatrix(:, ', num2str(i), ');']);
+end
+dataMatrix = table2array(subsetTable_2);
+numColumns = size(dataMatrix, 2);
+for i = 1:numColumns
+    eval(['destination_', char(destination_countries(i)) , ' = dataMatrix(:, ', num2str(i), ');']);
+end
+border = table2array(border);
+c = fitlm([GDP_i,GDP_j, dist_ij, SumGdp, border,origin_AUS, origin_AUT, origin_BEL, origin_CAN, origin_CHE, origin_CHL, origin_CHN, origin_CZE, origin_DEU, origin_DNK, origin_ESP, origin_EST, origin_FRA, origin_GBR, origin_GRC, origin_IRL, origin_ISL, origin_JPN, origin_MEX, origin_NOR, origin_NZL, origin_POL, origin_PRT, origin_SVK, origin_SWE, origin_TUR, origin_USA, destination_AUS, destination_AUT, destination_BEL, destination_CAN, destination_CHE, destination_CHL, destination_CHN, destination_CZE, destination_DEU, destination_DNK, destination_ESP, destination_EST, destination_FRA, destination_GBR, destination_GRC, destination_IRL, destination_ISL, destination_JPN, destination_MEX, destination_NOR, destination_NZL, destination_POL, destination_PRT, destination_SVK, destination_SWE, destination_TUR, destination_USA], export_ij, "linear");
