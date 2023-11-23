@@ -140,3 +140,23 @@ for i = 1:numColumns
 end
 border = table2array(border);
 c = fitlm([GDP_i,GDP_j, dist_ij, SumGdp, border,origin_AUS, origin_AUT, origin_BEL, origin_CAN, origin_CHE, origin_CHL, origin_CHN, origin_CZE, origin_DEU, origin_DNK, origin_ESP, origin_EST, origin_FRA, origin_GBR, origin_GRC, origin_IRL, origin_ISL, origin_JPN, origin_MEX, origin_NOR, origin_NZL, origin_POL, origin_PRT, origin_SVK, origin_SWE, origin_TUR, origin_USA, destination_AUS, destination_AUT, destination_BEL, destination_CAN, destination_CHE, destination_CHL, destination_CHN, destination_CZE, destination_DEU, destination_DNK, destination_ESP, destination_EST, destination_FRA, destination_GBR, destination_GRC, destination_IRL, destination_ISL, destination_JPN, destination_MEX, destination_NOR, destination_NZL, destination_POL, destination_PRT, destination_SVK, destination_SWE, destination_TUR, destination_USA], export_ij, "linear");
+%% Let's consider the use of "Common language" and "Common ethnicity" as a potential instrument for protectionist policies in the context of international trade. We'll construct a narrative explaining why this variable may satisfy the orthogonality and rank tests for instrument validity:
+
+%**Narrative:"Common language" and "Common ethnicity" as Instruments for Protectionist Policies**
+
+%1. **Theoretical Justification:**
+%  - Common language and Common ethnicity create commitments of friendship between countries to cooperate on 
+% various levels, including trade facilitation, economic partnerships, and diplomatic relations. It 
+% often involves a mutual understanding of shared goals, fostering an environment conducive to open and collaborative 
+% trade.
+% 2. **Orthogonality Test:**
+% - The orthogonality test checks whether the instrument is uncorrelated with the error term in the main regression.
+% In this case, it is reasonable to assume that the Common language and Common ethnicity between two countries
+% is not directly related to the unobserved factors affecting protectionist policies. Countries may enjoy these
+% relationships for reasons unrelated to their inclination towards protectionism, such as mutual economic benefits or
+% political cooperation.
+% 3. **Rank Test:**
+% - The rank test assesses whether the instrument is sufficiently correlated with the endogenous variable
+% (protectionist policies) to be considered relevant. In this case, the Common language and Common ethnicity
+% are expected to be positively correlated with a lower likelihood of engaging in protectionist policies.
+% Countries with stronger ties are more likely to prioritize cooperation over protectionism.
